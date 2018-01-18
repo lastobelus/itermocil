@@ -15,7 +15,7 @@ src = src.sub(/version='\d+\.\d+\.\d+'/, "version='#{new_version}'")
 File.open(SETUPFILE, "w") { |file| file.puts src }
 
 `git add -A && git commit -am 'bump version: #{new_version}'`
-`git tag -a v#{new_version} -m '#{ARGV[1]}'`
+`git tag -a v#{new_version} -m '#{ARGV[1] || "bugfixes"}'`
 `git push && git push --tags`
 
 cwd = Dir.getwd

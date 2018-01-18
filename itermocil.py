@@ -680,8 +680,10 @@ def main():
         # parser.error('You must supply a layout name, or just the --list option. Use -h for help.')
         filepath = os.path.join(os.getcwd(), 'iTermocil.yml')
         if not os.path.isfile(filepath):
-            parser.print_help()
-            sys.exit(1)
+            filepath = os.path.join(os.getcwd(), 'itermocil.yml')
+            if not os.path.isfile(filepath):
+                parser.print_help()
+                sys.exit(1)
     else:
         layout = args.layout_name[0]
         # Sanitize input

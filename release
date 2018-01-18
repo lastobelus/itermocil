@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+SRCFILE = "itermocil.py"
+SETUPFILE = "setup.py"
+
+src = File.read(SRCFILE)
+version = src.match /__version__ = '(\d+)\.(\d+)\.(\d+)'/
+
+new_version = "#{version[1]}.#{version[2]}.#{version[3].to_i + 1}"
+
+src = src.sub(/__version__ = '\d+\.\d+\.\d+'/, "__version__ = '#{new_version}'")
+File.open(SRCFILE, "w") { |file| file.puts src }
+
+src = File.read(SETUPFILE)
+src = src.sub(/version='\d+\.\d+\.\d+'/, "version='#{new_version}'")
+File.open(SETUPFILE, "w") { |file| file.puts src }
+
+`git add -A && git commit -am 'bump version: #{new_version}'`
+`git tag -a v#{new_version} -m '#{ARGV[1]}'`
+`git push && git push --tags`
+
+cwd = Dir.getwd
+`cd /tmp && wget https://github.com/lastobelus/itermocil/archive/v#{new_version}.tar.gz`
+sha = `gsha256sum v0.2.2.tar.gz`.split(/ +/).first
+tap_path = File.join(File.dirname(cwd), 'homebrew-brews')
+formula_path = File.join(tap_path, 'Formula', 'itermocil.rb' )
+formula = File.read(formula_path)
+formula = formula.sub(/sha256 "[^"]+"/, %Q(sha256 "#{sha}"))
+formula = formula.sub(%r(archive/v\d+\.\d+\.\d+/, "archive/v#{new_version}"))
+
+
+`cd #{tap_path} && git add -A && git commit -am "itermocil release: v#{new_version}" && git push`
+`brew install lastobelus/brews/itermocil`

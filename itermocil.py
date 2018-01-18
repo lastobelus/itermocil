@@ -682,8 +682,10 @@ def main():
         if not os.path.isfile(filepath):
             filepath = os.path.join(os.getcwd(), 'itermocil.yml')
             if not os.path.isfile(filepath):
-                parser.print_help()
-                sys.exit(1)
+                filepath = os.path.join(os.getcwd(), '.itermocil.yml')
+                if not os.path.isfile(filepath):
+                    parser.print_help()
+                    sys.exit(1)
     else:
         layout = args.layout_name[0]
         # Sanitize input

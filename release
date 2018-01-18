@@ -20,13 +20,14 @@ File.open(SETUPFILE, "w") { |file| file.puts src }
 
 cwd = Dir.getwd
 `cd /tmp && wget https://github.com/lastobelus/itermocil/archive/v#{new_version}.tar.gz`
-sha = `gsha256sum v0.2.2.tar.gz`.split(/ +/).first
+
+sha = `cd /tmp && gsha256sum v#{new_version}.tar.gz`.split(/ +/).first
 tap_path = File.join(File.dirname(cwd), 'homebrew-brews')
 formula_path = File.join(tap_path, 'Formula', 'itermocil.rb' )
 formula = File.read(formula_path)
 formula = formula.sub(/sha256 "[^"]+"/, %Q(sha256 "#{sha}"))
-formula = formula.sub(%r(archive/v\d+\.\d+\.\d+/, "archive/v#{new_version}"))
-
+formula = formula.sub(%r(archive/v\d+\.\d+\.\d+), "archive/v#{new_version}")
+File.open(formula_path, "w") { |file| file.puts formula }
 
 `cd #{tap_path} && git add -A && git commit -am "itermocil release: v#{new_version}" && git push`
-`brew install lastobelus/brews/itermocil`
+`brew upgrade lastobelus/brews/itermocil`

@@ -15,7 +15,7 @@ src = File.read(SETUPFILE)
 src = src.sub(/version='\d+\.\d+\.\d+'/, "version='#{new_version}'")
 File.open(SETUPFILE, "w") { |file| file.puts src }
 
-`git add -A && git commit -am 'bump version: #{new_version}'`
+`git add -A && git commit -am '#{ARGV[0] || "bump version: #{new_version}"}'`
 `git tag -a v#{new_version} -m '#{ARGV[0] || "bugfixes"}'`
 `git push && git push --tags`
 

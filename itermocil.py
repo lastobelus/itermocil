@@ -10,7 +10,7 @@ import yaml
 from math import ceil
 
 
-__version__ = '0.2.7'
+__version__ = '0.2.8'
 
 
 class Itermocil(object):
@@ -198,7 +198,7 @@ class Itermocil(object):
         elif layout == 'main-vertical-with-tiny':
 
             self.applescript.append(create_pane(1, 2, "vertical"))
-            for p in range(3, num_panes+1):
+            for p in range(3, num_panes):
                 self.applescript.append(create_pane(p-1, p, "horizontal"))
             self.applescript.append("set mainHeight to rows of pane_1")
             self.applescript.append(create_pane(1, num_panes, "horizontal"))
